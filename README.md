@@ -7,13 +7,14 @@ frame — without hand-writing a `UIPresentationController` and transitioning
 delegate every time.
 
 Presentor is derived from [Presentr](https://github.com/IcaliaLabs/Presentr) (MIT),
-rebuilt for iOS 15+ / Swift 5.9 with value-type configuration, async/await, and
-SwiftUI support.
+rebuilt for iOS 15+ with value-type configuration, async/await, and SwiftUI
+support. It builds in Swift 6 language mode with strict concurrency, and ships a
+Swift 5.10 compatibility manifest.
 
 ## Requirements
 
 - iOS 15.0+
-- Swift 5.9+
+- Swift 5.10+ (Xcode 15.4+) or Swift 6.0+ (Xcode 16+)
 
 ## Installation
 
@@ -21,9 +22,12 @@ Swift Package Manager:
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/mo5tone/Presentor.git", from: "1.0.0")
+    .package(url: "https://github.com/mo5tone/Presentor.git", from: "1.1.0")
 ]
 ```
+
+SwiftPM picks `Package.swift` (Swift 6 language mode) on Swift 6 toolchains and
+`Package@swift-5.swift` on Swift 5.10 toolchains.
 
 ## Quick start
 

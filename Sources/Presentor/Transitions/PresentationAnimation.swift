@@ -43,9 +43,9 @@ public enum AnimationTiming: Equatable {
 /// animations, or `beforeAnimation`/`performAnimation` (and optionally
 /// `afterAnimation`) for fully custom ones.
 open class PresentationAnimation: NSObject, UIViewControllerAnimatedTransitioning {
-    public var timing: AnimationTiming
+    public nonisolated(unsafe) var timing: AnimationTiming
 
-    public init(timing: AnimationTiming = .normal(duration: 0.4)) {
+    public nonisolated init(timing: AnimationTiming = .normal(duration: 0.4)) {
         self.timing = timing
     }
 

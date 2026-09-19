@@ -10,7 +10,7 @@ import Foundation
 public final class CoverHorizontalAnimation: PresentationAnimation {
     private let fromRight: Bool
 
-    public init(fromRight: Bool = true) {
+    public nonisolated init(fromRight: Bool = true) {
         self.fromRight = fromRight
         super.init()
     }

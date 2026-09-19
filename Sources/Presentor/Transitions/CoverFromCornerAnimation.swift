@@ -32,7 +32,7 @@ public enum Corner: Equatable, Sendable {
 public final class CoverFromCornerAnimation: PresentationAnimation {
     private let corner: Corner
 
-    public init(corner: Corner) {
+    public nonisolated init(corner: Corner) {
         self.corner = corner
         super.init()
     }

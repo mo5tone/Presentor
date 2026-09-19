@@ -14,6 +14,7 @@ import SwiftUI
 /// (`Presentation.dynamic()`). UIKit view controllers are measured with Auto
 /// Layout; SwiftUI content has no Auto Layout intrinsic size, so hosting
 /// controllers provide their own measurement.
+@MainActor
 protocol PreferredSizeProviding: AnyObject {
     func preferredSize(in containerSize: CGSize) -> CGSize?
 }

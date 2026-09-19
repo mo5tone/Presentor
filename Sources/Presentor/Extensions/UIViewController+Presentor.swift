@@ -7,7 +7,10 @@
 
 import UIKit
 
-private var coordinatorAssociationKey: UInt8 = 0
+@MainActor
+private enum PresentorAssociationKeys {
+    static var coordinator: UInt8 = 0
+}
 
 public extension UIViewController {
     /// Present a view controller using a `Presentation` value.
@@ -26,7 +29,7 @@ public extension UIViewController {
                  completion: (() -> Void)? = nil) {
         let coordinator = PresentationCoordinator(presentation: presentation)
         objc_setAssociatedObject(viewController,
-                                 &coordinatorAssociationKey,
+                                 &PresentorAssociationKeys.coordinator,
                                  coordinator,
                                  .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         viewController.transitioningDelegate = coordinator

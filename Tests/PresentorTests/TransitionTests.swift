@@ -2,6 +2,7 @@ import Foundation
 import Testing
 @testable import Presentor
 
+@MainActor
 @Suite struct TransitionTests {
     private let container = CGRect(x: 0, y: 0, width: 400, height: 800)
     private let finalFrame = CGRect(x: 100, y: 300, width: 200, height: 200)

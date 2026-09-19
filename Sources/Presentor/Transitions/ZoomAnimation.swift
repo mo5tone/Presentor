@@ -12,7 +12,7 @@ import UIKit
 public final class ZoomAnimation: PresentationAnimation {
     private let initialScale: CGFloat
 
-    public init(initialScale: CGFloat = 0.85) {
+    public nonisolated init(initialScale: CGFloat = 0.85) {
         self.initialScale = initialScale
     }
 
