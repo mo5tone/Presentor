@@ -24,7 +24,7 @@ public extension View {
         background(
             PresentorPresenter(isPresented: isPresented,
                                presentation: presentation,
-                               content: { AnyView(content()) })
+                               content: content)
         )
     }
 
@@ -32,48 +32,56 @@ public extension View {
     func presentor<Item: Identifiable, Content: View>(item: Binding<Item?>,
                                                       presentation: Presentation = .popup,
                                                       @ViewBuilder content: @escaping (Item) -> Content) -> some View {
-        let isPresented = Binding(
-            get: { item.wrappedValue != nil },
-            set: { newValue in
-                if !newValue {
-                    item.wrappedValue = nil
-                }
-            }
-        )
-
-        return background(
-            PresentorPresenter(isPresented: isPresented,
-                               presentation: presentation,
-                               content: {
-                                   if let value = item.wrappedValue {
-                                       AnyView(content(value))
-                                   } else {
-                                       AnyView(EmptyView())
-                                   }
-                               })
+        background(
+            PresentorItemPresenter(item: item,
+                                   presentation: presentation,
+                                   content: content)
         )
     }
 }
 
-private struct PresentorPresenter: UIViewControllerRepresentable {
+private struct PresentorPresenter<Content: View>: UIViewControllerRepresentable {
     @Binding var isPresented: Bool
     let presentation: Presentation
-    let content: () -> AnyView
+    let content: () -> Content
 
-    func makeUIViewController(context: Context) -> PresenterViewController {
+    func makeUIViewController(context: Context) -> PresenterViewController<Content> {
         PresenterViewController()
     }
 
-    func updateUIViewController(_ viewController: PresenterViewController, context: Context) {
-        viewController.update(isPresented: isPresented,
-                              presentation: presentation,
-                              content: content,
-                              onDismiss: { isPresented = false })
+    func updateUIViewController(_ viewController: PresenterViewController<Content>, context: Context) {
+        if isPresented {
+            viewController.presentIfNeeded(presentation: presentation,
+                                           content: content,
+                                           onDismiss: { isPresented = false })
+        } else {
+            viewController.dismiss()
+        }
     }
 }
 
-private final class PresenterViewController: UIViewController {
-    private var host: DismissReportingHostingController?
+private struct PresentorItemPresenter<Item: Identifiable, Content: View>: UIViewControllerRepresentable {
+    @Binding var item: Item?
+    let presentation: Presentation
+    let content: (Item) -> Content
+
+    func makeUIViewController(context: Context) -> PresenterViewController<Content> {
+        PresenterViewController()
+    }
+
+    func updateUIViewController(_ viewController: PresenterViewController<Content>, context: Context) {
+        if let value = item {
+            viewController.presentIfNeeded(presentation: presentation,
+                                           content: { content(value) },
+                                           onDismiss: { self.item = nil })
+        } else {
+            viewController.dismiss()
+        }
+    }
+}
+
+private final class PresenterViewController<Content: View>: UIViewController {
+    private var host: DismissReportingHostingController<Content>?
 
     override func loadView() {
         let view = UIView()
@@ -82,37 +90,39 @@ private final class PresenterViewController: UIViewController {
         self.view = view
     }
 
-    func update(isPresented: Bool,
-                presentation: Presentation,
-                content: @escaping () -> AnyView,
-                onDismiss: @escaping () -> Void) {
-        // Defer so we never present or dismiss during a SwiftUI update pass.
+    func presentIfNeeded(presentation: Presentation,
+                         content: @escaping () -> Content,
+                         onDismiss: @escaping () -> Void) {
+        // Defer so we never present during a SwiftUI update pass.
         DispatchQueue.main.async { [weak self] in
             guard let self else { return }
 
-            if isPresented {
-                if let host = self.host {
-                    host.rootView = content()
-                    return
-                }
-
-                let host = DismissReportingHostingController(rootView: content())
-                host.view.backgroundColor = .clear
-                host.onDismiss = { [weak self] in
-                    onDismiss()
-                    self?.host = nil
-                }
-                self.host = host
-                self.present(host, using: presentation, animated: true)
-            } else if let host = self.host {
-                self.host = nil
-                host.dismiss(animated: true)
+            if let host = self.host {
+                host.rootView = content()
+                return
             }
+
+            let host = DismissReportingHostingController(rootView: content())
+            host.view.backgroundColor = .clear
+            host.onDismiss = { [weak self] in
+                onDismiss()
+                self?.host = nil
+            }
+            self.host = host
+            self.present(host, using: presentation, animated: true)
+        }
+    }
+
+    func dismiss() {
+        DispatchQueue.main.async { [weak self] in
+            guard let self, let host = self.host else { return }
+            self.host = nil
+            host.dismiss(animated: true)
         }
     }
 }
 
-private final class DismissReportingHostingController: UIHostingController<AnyView> {
+private final class DismissReportingHostingController<Content: View>: UIHostingController<Content> {
     var onDismiss: (() -> Void)?
 
     override func viewDidDisappear(_ animated: Bool) {
