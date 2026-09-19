@@ -23,7 +23,7 @@ public struct PresentorTransitionContext {
 }
 
 /// The timing used for a transition's `UIView` animation.
-public enum AnimationTiming: Equatable {
+public enum AnimationTiming: Equatable, Sendable {
     case normal(duration: TimeInterval)
     case spring(duration: TimeInterval, delay: TimeInterval, damping: CGFloat, velocity: CGFloat)
 
@@ -43,7 +43,7 @@ public enum AnimationTiming: Equatable {
 /// animations, or `beforeAnimation`/`performAnimation` (and optionally
 /// `afterAnimation`) for fully custom ones.
 open class PresentationAnimation: NSObject, UIViewControllerAnimatedTransitioning {
-    public nonisolated(unsafe) var timing: AnimationTiming
+    public let timing: AnimationTiming
 
     public nonisolated init(timing: AnimationTiming = .normal(duration: 0.4)) {
         self.timing = timing
