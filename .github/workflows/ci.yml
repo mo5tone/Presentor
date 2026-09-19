@@ -21,11 +21,32 @@ jobs:
       - name: Show toolchain
         run: xcodebuild -version && swift --version
 
+      - name: Ensure an iOS Simulator runtime is installed
+        run: |
+          if ! xcrun simctl list runtimes | grep -q "SimRuntime.iOS"; then
+            echo "No iOS runtime found; downloading..."
+            xcodebuild -downloadPlatform iOS
+          fi
+
+      - name: Choose an available iOS Simulator
+        id: simulator
+        run: |
+          name=$(xcrun simctl list devices available \
+            | sed -nE 's/^[[:space:]]+(iPhone[^(]*[^ (])[[:space:]]+\([0-9A-F-]+\).*/\1/p' \
+            | head -1)
+          if [ -z "$name" ]; then
+            echo "No iPhone simulator found. Available devices:" >&2
+            xcrun simctl list devices available >&2
+            exit 1
+          fi
+          echo "Selected simulator: $name"
+          echo "name=$name" >> "$GITHUB_OUTPUT"
+
       - name: Run package tests
         run: |
           xcodebuild test \
             -scheme Presentor \
-            -destination 'platform=iOS Simulator,name=iPhone 16' \
+            -destination "platform=iOS Simulator,name=${{ steps.simulator.outputs.name }},OS=latest" \
             -parallel-testing-enabled NO
 
   example:
