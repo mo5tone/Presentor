@@ -5,6 +5,7 @@ struct ContentView: View {
     @State private var isPresented = false
     @State private var presentation = Presentation.popup
     @State private var contentBackground: Color = Color(.systemBackground)
+    @State private var isDynamicPresented = false
 
     var body: some View {
         NavigationView {
@@ -23,13 +24,18 @@ struct ContentView: View {
                 }
 
                 section("Dynamic") {
-                    button("Dynamic (Auto Layout)", .dynamic())
+                    Button("Dynamic (Auto Layout)") {
+                        isDynamicPresented = true
+                    }
                 }
             }
             .navigationTitle("Presentor")
         }
         .presentor(isPresented: $isPresented, presentation: presentation) {
             PopupContent(background: contentBackground, dismiss: { isPresented = false })
+        }
+        .presentor(isPresented: $isDynamicPresented, presentation: .dynamic()) {
+            DynamicCard(dismiss: { isDynamicPresented = false })
         }
     }
 
@@ -66,5 +72,24 @@ private struct PopupContent: View {
         .padding(24)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(background)
+    }
+}
+
+/// Intrinsically sized so it can demonstrate `.dynamic()` Auto Layout sizing.
+private struct DynamicCard: View {
+    let dismiss: () -> Void
+
+    var body: some View {
+        VStack(spacing: 16) {
+            Text("Dynamic sizing")
+                .font(.headline)
+            Text("This card is sized by its SwiftUI content.")
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+            Button("Dismiss", action: dismiss)
+                .buttonStyle(.borderedProminent)
+        }
+        .padding(24)
+        .background(Color(.systemBackground))
     }
 }

@@ -304,7 +304,15 @@ private extension PresentorController {
 
     /// Always measures content; cheap enough and avoids caching invalidation bugs.
     func measuredContentSize() -> CGSize {
-        presentedViewController.view.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
+        #if canImport(SwiftUI)
+        if let provider = presentedViewController as? PreferredSizeProviding,
+           let size = provider.preferredSize(in: containerFrame.size),
+           size != .zero {
+            return size
+        }
+        #endif
+
+        return presentedViewController.view.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
     }
 }
 

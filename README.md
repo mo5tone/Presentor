@@ -80,6 +80,11 @@ Or driven by an item:
 | `.bottomCard` | full × 350 | bottom edge | top rounded corners + swipe indicator |
 | `.dynamic(position:)` | Auto Layout | configurable | sizes to content |
 
+> **Dynamic sizing:** UIKit content is measured with Auto Layout. SwiftUI content
+> is measured with `UIHostingController.sizeThatFits(in:)` on iOS 16+, and a
+> best-effort Auto Layout fallback on iOS 15. For accurate results on iOS 15,
+> pass an explicit `ModalSize` or set the hosting controller's `preferredContentSize`.
+
 ### Customizing a presentation
 
 For example, a floating card pinned to the bottom: 400pt tall, 32pt horizontal

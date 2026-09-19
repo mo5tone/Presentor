@@ -1,5 +1,6 @@
 import Presentor
 import SnapshotTesting
+import SwiftUI
 import Testing
 import UIKit
 @testable import PresentorExample
@@ -53,20 +54,47 @@ import UIKit
         let container = try #require(containerView(of: window))
         assertSnapshot(of: container, as: .image)
     }
+
+    @Test func dynamicSwiftUI() throws {
+        let content = UIHostingController(rootView: DynamicSnapshotView())
+        let window = try #require(presenting(.dynamic(), content: content))
+        defer { window.isHidden = true }
+        let container = try #require(containerView(of: window))
+        assertSnapshot(of: container, as: .image)
+    }
+}
+
+private struct DynamicSnapshotView: View {
+    var body: some View {
+        VStack(spacing: 12) {
+            Text("Dynamic sizing")
+                .font(.headline)
+            Text("Sized by content.")
+                .font(.subheadline)
+        }
+        .padding(24)
+        .background(Color.white)
+    }
 }
 
 private func containerView(of window: UIWindow) -> UIView? {
     window.rootViewController?.presentedViewController?.view.superview
 }
 
-/// Presents a solid-colored controller with `presentation` and returns the
-/// window, or `nil` if the presentation never took place.
+/// Presents a solid-colored controller with `presentation`.
 @MainActor
 private func presenting(_ presentation: Presentation, contentBackground: UIColor = .systemRed) -> UIWindow? {
-    let window = makeWindow()
-    let root = window.rootViewController!
     let content = UIViewController()
     content.view.backgroundColor = contentBackground
+    return presenting(presentation, content: content)
+}
+
+/// Presents `content` with `presentation` and returns the window, or `nil` if
+/// the presentation never took place.
+@MainActor
+private func presenting(_ presentation: Presentation, content: UIViewController) -> UIWindow? {
+    let window = makeWindow()
+    let root = window.rootViewController!
 
     root.present(content, using: presentation, animated: false)
 
