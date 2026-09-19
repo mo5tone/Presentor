@@ -1,0 +1,6 @@
+--swiftversion 5.9
+--indent 4
+--hexgrouping 4,4,4,4
+--maxwidth 150
+--wrapeffects never
+--disable redundantType,wrapMultilineStatementBraces

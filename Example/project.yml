@@ -1,0 +1,60 @@
+name: PresentorExample
+options:
+  bundleIdPrefix: dev.presentor
+  deploymentTarget:
+    iOS: "15.0"
+  createIntermediateGroups: true
+
+packages:
+  Presentor:
+    path: ..
+  SnapshotTesting:
+    url: https://github.com/pointfreeco/swift-snapshot-testing
+    from: 1.17.0
+
+settings:
+  base:
+    SWIFT_VERSION: "5.9"
+
+targets:
+  PresentorExample:
+    type: application
+    platform: iOS
+    sources:
+      - PresentorExample
+    dependencies:
+      - package: Presentor
+        product: Presentor
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        INFOPLIST_KEY_UIApplicationSceneManifest_Generation: YES
+        PRODUCT_BUNDLE_IDENTIFIER: dev.presentor.PresentorExample
+
+  PresentorExampleTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - PresentorExampleTests
+    dependencies:
+      - target: PresentorExample
+      - package: Presentor
+        product: Presentor
+      - package: SnapshotTesting
+        product: SnapshotTesting
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        TEST_HOST: "$(BUILT_PRODUCTS_DIR)/PresentorExample.app/PresentorExample"
+        BUNDLE_LOADER: "$(TEST_HOST)"
+
+schemes:
+  PresentorExample:
+    build:
+      targets:
+        PresentorExample: all
+        PresentorExampleTests: [test]
+    test:
+      targets:
+        - PresentorExampleTests

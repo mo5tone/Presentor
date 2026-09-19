@@ -1,0 +1,53 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  logic-tests:
+    name: Swift Testing (logic)
+    runs-on: macos-15
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Show toolchain
+        run: xcodebuild -version && swift --version
+
+      - name: Run package tests
+        run: |
+          xcodebuild test \
+            -scheme Presentor \
+            -destination 'platform=iOS Simulator,name=iPhone 16' \
+            -parallel-testing-enabled NO
+
+  example:
+    name: Example build
+    runs-on: macos-15
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install XcodeGen
+        run: brew install xcodegen
+
+      - name: Generate example project
+        working-directory: Example
+        run: xcodegen generate
+
+      - name: Build example
+        run: |
+          xcodebuild build \
+            -project Example/PresentorExample.xcodeproj \
+            -scheme PresentorExample \
+            -destination 'generic/platform=iOS Simulator'
+
+      # Snapshot references are recorded on a specific simulator/runtime. Run them
+      # locally against a matching simulator; CI validates the build and logic tests.
