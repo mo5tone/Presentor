@@ -25,7 +25,8 @@ xcodebuild build -scheme Presentor -destination 'generic/platform=iOS Simulator'
 - Keep the public API value-based: configuration lives in `Presentation`.
 - Add or update unit tests for any sizing, positioning, transition, or keyboard math.
 - Run the formatter before opening a pull request: `swiftformat Sources Tests`.
-- Update `CHANGELOG.md` for user-facing changes.
+- Do not edit `CHANGELOG.md` or version numbers by hand; releases are automated
+  (see below).
 
 ## Commit and PR conventions
 
@@ -54,6 +55,13 @@ Allowed types: `build`, `chore`, `ci`, `docs`, `feat`, `fix`, `perf`, `refactor`
 ## Releases and changelog
 
 Releases are automated with [release-please](https://github.com/googleapis/release-please).
-Do not edit `CHANGELOG.md` by hand or bump versions manually — release-please
-reads the Conventional Commit history on `main` and opens a release PR that updates
-`CHANGELOG.md` and the version tag. Merging that PR cuts the release.
+It reads the Conventional Commit history on `main` and opens a release PR that
+updates `CHANGELOG.md` and the version tag. Merging that PR cuts the release.
+
+## Versioning
+
+- The project follows [Semantic Versioning](https://semver.org/) (`MAJOR.MINOR.PATCH`).
+- Git tags are **pure numeric, without a `v` prefix** (for example `1.1.0`).
+- `CHANGELOG.md` headings use the same numeric form (`## [1.1.0]`).
+- Version bumps are derived from commit types: `feat` → minor, `fix` → patch,
+  breaking changes → major.
