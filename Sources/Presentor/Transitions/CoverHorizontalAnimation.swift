@@ -5,7 +5,7 @@
 //  Based on Presentr (MIT). See NOTICE.md.
 //
 
-import Foundation
+import CoreGraphics
 
 public final class CoverHorizontalAnimation: PresentationAnimation {
     private let fromRight: Bool
@@ -15,7 +15,7 @@ public final class CoverHorizontalAnimation: PresentationAnimation {
         super.init()
     }
 
-    public override func transform(containerFrame: CGRect, finalFrame: CGRect) -> CGRect {
+    override public func transform(containerFrame: CGRect, finalFrame: CGRect) -> CGRect {
         var initialFrame = finalFrame
         if fromRight {
             initialFrame.origin.x = containerFrame.width + initialFrame.width

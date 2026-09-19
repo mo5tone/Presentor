@@ -1,8 +1,8 @@
 import Foundation
-import Testing
 @testable import Presentor
+import Testing
 
-@Suite struct KeyboardTranslationTests {
+struct KeyboardTranslationTests {
     private let container = CGRect(x: 0, y: 0, width: 400, height: 800)
     private let keyboard = CGRect(x: 0, y: 500, width: 400, height: 300)
 
@@ -36,8 +36,8 @@ import Testing
     @Test func customPaddingIsUsedWhenNotFullScreen() {
         let frame = CGRect(x: 100, y: 500, width: 200, height: 200)
         let result = KeyboardTranslation(.moveUp, padding: 20).calculate(keyboardFrame: keyboard,
-                                                                        presentedFrame: frame,
-                                                                        containerFrame: container)
+                                                                         presentedFrame: frame,
+                                                                         containerFrame: container)
         // keyboardTop = 500, presentedViewBottom = 700 + 20 = 720, offset = 220
         #expect(result.frame.origin.y == 280)
         #expect(result.yOffset == 220)

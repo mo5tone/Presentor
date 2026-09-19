@@ -44,16 +44,16 @@ public struct KeyboardTranslation: Equatable, Sendable {
     /// - Returns: The translated frame and the y offset that was applied.
     func calculate(keyboardFrame: CGRect,
                    presentedFrame: CGRect,
-                   containerFrame: CGRect) -> (frame: CGRect, yOffset: CGFloat) {
+                   containerFrame: CGRect) -> (frame: CGRect, yOffset: CGFloat)
+    {
         let keyboardTop = containerFrame.maxY - keyboardFrame.height
         let isFullScreen = (presentedFrame.maxY == containerFrame.maxY)
-        let buffer: CGFloat
-        if isFullScreen {
-            buffer = 0
-        } else if let padding = padding {
-            buffer = padding
+        let buffer: CGFloat = if isFullScreen {
+            0
+        } else if let padding {
+            padding
         } else {
-            buffer = 20
+            20
         }
 
         let presentedViewBottom = presentedFrame.maxY + buffer

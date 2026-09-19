@@ -5,8 +5,6 @@
 //  Based on Presentr (MIT). See NOTICE.md.
 //
 
-import CoreGraphics
-
 public extension Presentation {
     /// A small 270x180 alert, centered, with rounded corners, zooming in and out.
     static var alert: Presentation {

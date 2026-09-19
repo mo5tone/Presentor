@@ -1,8 +1,8 @@
 import Foundation
-import Testing
 @testable import Presentor
+import Testing
 
-@Suite struct ModalPositionTests {
+struct ModalPositionTests {
     private let container = CGRect(x: 0, y: 0, width: 400, height: 800)
     private let size = CGSize(width: 100, height: 100)
 

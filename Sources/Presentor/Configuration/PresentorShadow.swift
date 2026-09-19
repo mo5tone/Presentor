@@ -17,7 +17,8 @@ public struct PresentorShadow: Equatable {
     public init(color: UIColor? = nil,
                 opacity: Float? = nil,
                 offset: CGSize? = nil,
-                radius: CGFloat? = nil) {
+                radius: CGFloat? = nil)
+    {
         self.color = color
         self.opacity = opacity
         self.offset = offset

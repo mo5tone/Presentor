@@ -4,13 +4,13 @@ import PackageDescription
 let package = Package(
     name: "Presentor",
     platforms: [
-        .iOS(.v15)
+        .iOS(.v15),
     ],
     products: [
-        .library(name: "Presentor", targets: ["Presentor"])
+        .library(name: "Presentor", targets: ["Presentor"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/pointfreeco/swift-snapshot-testing", from: "1.17.0")
+        .package(url: "https://github.com/pointfreeco/swift-snapshot-testing", from: "1.17.0"),
     ],
     targets: [
         .target(name: "Presentor"),
@@ -18,8 +18,8 @@ let package = Package(
             name: "PresentorTests",
             dependencies: [
                 "Presentor",
-                .product(name: "SnapshotTesting", package: "swift-snapshot-testing")
+                .product(name: "SnapshotTesting", package: "swift-snapshot-testing"),
             ]
-        )
+        ),
     ]
 )

@@ -203,7 +203,7 @@ Image snapshots live in the example app's test target because UIKit presentation
 need a live window scene (a plain SwiftPM logic-test host does not provide one):
 
 ```sh
-brew install xcodegen
+mise install
 cd Example && xcodegen generate
 xcodebuild test -project Example/PresentorExample.xcodeproj -scheme PresentorExample \
   -destination 'platform=iOS Simulator,name=iPhone 17'
@@ -211,6 +211,16 @@ xcodebuild test -project Example/PresentorExample.xcodeproj -scheme PresentorExa
 
 Snapshot references are recorded on a specific simulator/runtime. Re-record after
 intentional visual changes with `withSnapshotTesting(record: .all) { ... }`.
+
+## Code style
+
+Formatting and linting are pinned in `.mise.toml`:
+
+```sh
+mise run lint     # check (SwiftLint --strict + SwiftFormat --lint)
+mise run format   # auto-fix
+mise run analyze  # SwiftLint analyzer rules (unused declarations)
+```
 
 ## Credits
 

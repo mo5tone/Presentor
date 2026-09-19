@@ -5,8 +5,6 @@
 //  Based on Presentr (MIT). See NOTICE.md.
 //
 
-import Foundation
-
 /// Describes the animation used to present or dismiss a view controller.
 public enum Transition {
     /// Zoom in from a smaller size while fading in.
@@ -32,23 +30,23 @@ public enum Transition {
     public func animation() -> PresentationAnimation {
         switch self {
         case .zoom:
-            return ZoomAnimation()
+            ZoomAnimation()
         case .crossDissolve:
-            return CrossDissolveAnimation()
+            CrossDissolveAnimation()
         case .coverVertical:
-            return CoverVerticalAnimation()
+            CoverVerticalAnimation()
         case .coverVerticalFromTop:
-            return CoverVerticalFromTopAnimation()
+            CoverVerticalFromTopAnimation()
         case .coverHorizontalFromRight:
-            return CoverHorizontalAnimation(fromRight: true)
+            CoverHorizontalAnimation(fromRight: true)
         case .coverHorizontalFromLeft:
-            return CoverHorizontalAnimation(fromRight: false)
+            CoverHorizontalAnimation(fromRight: false)
         case .flipHorizontal:
-            return FlipHorizontalAnimation()
-        case .coverFromCorner(let corner):
-            return CoverFromCornerAnimation(corner: corner)
-        case .custom(let animation):
-            return animation
+            FlipHorizontalAnimation()
+        case let .coverFromCorner(corner):
+            CoverFromCornerAnimation(corner: corner)
+        case let .custom(animation):
+            animation
         }
     }
 }

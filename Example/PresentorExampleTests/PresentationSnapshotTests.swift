@@ -1,9 +1,9 @@
 import Presentor
+@testable import PresentorExample
 import SnapshotTesting
 import SwiftUI
 import Testing
 import UIKit
-@testable import PresentorExample
 
 /// App-hosted image snapshots of the presentation chrome + presented content.
 ///
@@ -12,7 +12,7 @@ import UIKit
 /// References are stored under `Example/PresentorExampleTests/__Snapshots__`.
 /// Re-record after intentional visual changes with `withSnapshotTesting(record: .all) { ... }`.
 @MainActor
-@Suite struct PresentationSnapshotTests {
+struct PresentationSnapshotTests {
     @Test func alert() throws {
         let window = try #require(presenting(.alert))
         defer { window.isHidden = true }
@@ -110,11 +110,10 @@ private func presenting(_ presentation: Presentation, content: UIViewController)
 @MainActor
 private func makeWindow() -> UIWindow {
     let scene = UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.first
-    let window: UIWindow
-    if let scene {
-        window = UIWindow(windowScene: scene)
+    let window: UIWindow = if let scene {
+        UIWindow(windowScene: scene)
     } else {
-        window = UIWindow(frame: CGRect(x: 0, y: 0, width: 390, height: 844))
+        UIWindow(frame: CGRect(x: 0, y: 0, width: 390, height: 844))
     }
 
     window.overrideUserInterfaceStyle = .light

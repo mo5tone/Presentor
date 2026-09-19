@@ -4,7 +4,7 @@ import SwiftUI
 struct ContentView: View {
     @State private var isPresented = false
     @State private var presentation = Presentation.popup
-    @State private var contentBackground: Color = Color(.systemBackground)
+    @State private var contentBackground = Color(.systemBackground)
     @State private var isDynamicPresented = false
 
     var body: some View {
@@ -32,25 +32,25 @@ struct ContentView: View {
             .navigationTitle("Presentor")
         }
         .presentor(isPresented: $isPresented, presentation: presentation) {
-            PopupContent(background: contentBackground, dismiss: { isPresented = false })
+            PopupContent(background: contentBackground) { isPresented = false }
         }
         .presentor(isPresented: $isDynamicPresented, presentation: .dynamic()) {
-            DynamicCard(dismiss: { isDynamicPresented = false })
+            DynamicCard { isDynamicPresented = false }
         }
     }
 
     private func button(_ title: String,
                         _ presentation: Presentation,
-                        background: Color = Color(.systemBackground)) -> some View {
+                        background: Color = Color(.systemBackground)) -> some View
+    {
         Button(title) {
             self.presentation = presentation
-            self.contentBackground = background
+            contentBackground = background
             isPresented = true
         }
     }
 
-    @ViewBuilder
-    private func section<Content: View>(_ title: String, @ViewBuilder content: () -> Content) -> some View {
+    private func section(_ title: String, @ViewBuilder content: () -> some View) -> some View {
         Section(title) { content() }
     }
 }

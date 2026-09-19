@@ -26,7 +26,8 @@ public extension UIViewController {
     func present(_ viewController: UIViewController,
                  using presentation: Presentation,
                  animated: Bool = true,
-                 completion: (() -> Void)? = nil) {
+                 completion: (() -> Void)? = nil)
+    {
         let coordinator = PresentationCoordinator(presentation: presentation)
         objc_setAssociatedObject(viewController,
                                  &PresentorAssociationKeys.coordinator,
@@ -42,7 +43,8 @@ public extension UIViewController {
     @discardableResult
     func present(_ viewController: UIViewController,
                  using presentation: Presentation,
-                 animated: Bool = true) async -> Bool {
+                 animated: Bool = true) async -> Bool
+    {
         await withCheckedContinuation { continuation in
             present(viewController, using: presentation, animated: animated) {
                 continuation.resume(returning: true)

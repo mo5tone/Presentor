@@ -5,7 +5,7 @@
 //  Based on Presentr (MIT). See NOTICE.md.
 //
 
-import Foundation
+import CoreGraphics
 
 /// A corner used by `Transition.coverFromCorner(_:)`.
 public enum Corner: Equatable, Sendable {
@@ -16,15 +16,15 @@ public enum Corner: Equatable, Sendable {
 
     var isTop: Bool {
         switch self {
-        case .topLeft, .topRight: return true
-        default: return false
+        case .topLeft, .topRight: true
+        default: false
         }
     }
 
     var isLeft: Bool {
         switch self {
-        case .topLeft, .bottomLeft: return true
-        default: return false
+        case .topLeft, .bottomLeft: true
+        default: false
         }
     }
 }
@@ -37,7 +37,7 @@ public final class CoverFromCornerAnimation: PresentationAnimation {
         super.init()
     }
 
-    public override func transform(containerFrame: CGRect, finalFrame: CGRect) -> CGRect {
+    override public func transform(containerFrame: CGRect, finalFrame: CGRect) -> CGRect {
         var initialFrame = finalFrame
 
         initialFrame.origin.y = corner.isTop

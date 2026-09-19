@@ -21,11 +21,12 @@ final class PresentationCoordinator: NSObject, UIViewControllerTransitioningDele
         self.presentation = presentation
 
         if let context = presentation.behavior.context,
-           let view = context.view {
+           let view = context.view
+        {
             let origin = view.convert(view.frame.origin, to: nil)
-            self.contextFrame = CGRect(x: origin.x, y: origin.y, width: view.bounds.width, height: view.bounds.height)
+            contextFrame = CGRect(x: origin.x, y: origin.y, width: view.bounds.width, height: view.bounds.height)
         } else {
-            self.contextFrame = nil
+            contextFrame = nil
         }
 
         super.init()
@@ -33,20 +34,22 @@ final class PresentationCoordinator: NSObject, UIViewControllerTransitioningDele
 
     func presentationController(forPresented presented: UIViewController,
                                 presenting: UIViewController?,
-                                source: UIViewController) -> UIPresentationController? {
+                                source _: UIViewController) -> UIPresentationController?
+    {
         PresentorController(presentedViewController: presented,
                             presentingViewController: presenting,
                             presentation: presentation,
                             contextFrameForPresentation: contextFrame)
     }
 
-    func animationController(forPresented presented: UIViewController,
-                             presenting: UIViewController,
-                             source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+    func animationController(forPresented _: UIViewController,
+                             presenting _: UIViewController,
+                             source _: UIViewController) -> UIViewControllerAnimatedTransitioning?
+    {
         presentation.transitionForPresent.animation()
     }
 
-    func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+    func animationController(forDismissed _: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         presentation.transitionForDismiss.animation()
     }
 }

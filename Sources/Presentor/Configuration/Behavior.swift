@@ -31,7 +31,8 @@ public struct Behavior {
                 dismissOnSwipeDirection: DismissSwipeDirection = .automatic,
                 dismissAnimated: Bool = true,
                 keyboardTranslation: KeyboardTranslation = .none,
-                context: UIViewController? = nil) {
+                context: UIViewController? = nil)
+    {
         self.backgroundTap = backgroundTap
         self.outsideContextTap = outsideContextTap
         self.dismissOnSwipe = dismissOnSwipe

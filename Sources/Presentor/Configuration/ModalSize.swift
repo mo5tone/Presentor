@@ -5,7 +5,6 @@
 //  Based on Presentr (MIT). See NOTICE.md.
 //
 
-import CoreGraphics
 import UIKit
 
 /// Describes a single dimension (width or height) of a presented view controller.
@@ -59,48 +58,50 @@ extension ModalDimension {
     ///   - automatic: The measured content width, used by `.automatic`.
     func resolveWidth(parent: CGFloat,
                       orientation: UIInterfaceOrientation,
-                      automatic: CGFloat = 0) -> CGFloat {
+                      automatic: CGFloat = 0) -> CGFloat
+    {
         switch self {
         case .default:
-            return floor(parent - CGFloat(PresentorConstants.defaultSideMargin * 2))
+            floor(parent - CGFloat(PresentorConstants.defaultSideMargin * 2))
         case .half:
-            return floor(parent / 2)
+            floor(parent / 2)
         case .full:
-            return parent
-        case .fixed(let value):
-            return CGFloat(value)
-        case .percent(let percentage):
-            return floor(parent * CGFloat(percentage))
-        case .padding(let padding):
-            return floor(parent - CGFloat(padding) * 2)
-        case .orientation(let portrait, let landscape):
-            return min(parent, CGFloat(orientation.appearsLandscape ? landscape : portrait))
+            parent
+        case let .fixed(value):
+            CGFloat(value)
+        case let .percent(percentage):
+            floor(parent * CGFloat(percentage))
+        case let .padding(padding):
+            floor(parent - CGFloat(padding) * 2)
+        case let .orientation(portrait, landscape):
+            min(parent, CGFloat(orientation.appearsLandscape ? landscape : portrait))
         case .automatic:
-            return automatic
+            automatic
         }
     }
 
     /// Resolves this dimension into a concrete height.
     func resolveHeight(parent: CGFloat,
                        orientation: UIInterfaceOrientation,
-                       automatic: CGFloat = 0) -> CGFloat {
+                       automatic: CGFloat = 0) -> CGFloat
+    {
         switch self {
         case .default:
-            return floor(parent * CGFloat(PresentorConstants.defaultHeightPercentage))
+            floor(parent * CGFloat(PresentorConstants.defaultHeightPercentage))
         case .half:
-            return floor(parent / 2)
+            floor(parent / 2)
         case .full:
-            return parent
-        case .fixed(let value):
-            return CGFloat(value)
-        case .percent(let percentage):
-            return floor(parent * CGFloat(percentage))
-        case .padding(let padding):
-            return floor(parent - CGFloat(padding) * 2)
-        case .orientation(let portrait, let landscape):
-            return min(parent, CGFloat(orientation.appearsLandscape ? landscape : portrait))
+            parent
+        case let .fixed(value):
+            CGFloat(value)
+        case let .percent(percentage):
+            floor(parent * CGFloat(percentage))
+        case let .padding(padding):
+            floor(parent - CGFloat(padding) * 2)
+        case let .orientation(portrait, landscape):
+            min(parent, CGFloat(orientation.appearsLandscape ? landscape : portrait))
         case .automatic:
-            return automatic
+            automatic
         }
     }
 }

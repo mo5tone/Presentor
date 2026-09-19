@@ -35,7 +35,8 @@ public struct Appearance {
                 customBackgroundView: UIView? = nil,
                 roundedCorners: RoundedCorners? = nil,
                 shadow: PresentorShadow? = nil,
-                showSwipeIndicator: Bool? = nil) {
+                showSwipeIndicator: Bool? = nil)
+    {
         self.backgroundColor = backgroundColor
         self.backgroundOpacity = backgroundOpacity
         self.blur = blur

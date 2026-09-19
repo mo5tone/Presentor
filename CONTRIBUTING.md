@@ -5,7 +5,8 @@ Thanks for your interest in Presentor.
 ## Getting started
 
 1. Fork and clone the repository.
-2. Open the package or develop from the command line.
+2. Install the pinned toolchain: `mise install`.
+3. Open the package or develop from the command line.
 
 Because Presentor links UIKit, it cannot be built or tested with `swift test` on
 macOS. Use `xcodebuild` against an iOS Simulator instead:
@@ -24,7 +25,9 @@ xcodebuild build -scheme Presentor -destination 'generic/platform=iOS Simulator'
 
 - Keep the public API value-based: configuration lives in `Presentation`.
 - Add or update unit tests for any sizing, positioning, transition, or keyboard math.
-- Run the formatter before opening a pull request: `swiftformat Sources Tests`.
+- Lint and format before opening a pull request: `mise run lint`
+  (auto-fix with `mise run format`). CI runs the same checks and will reject
+  unformatted or lint-failing code.
 - Do not edit `CHANGELOG.md` or version numbers by hand; releases are automated
   (see below).
 - The package has two manifests: `Package.swift` (Swift 6 language mode) and

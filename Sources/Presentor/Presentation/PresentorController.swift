@@ -10,7 +10,6 @@ import UIKit
 /// Presentor's custom presentation controller. Owns sizing, positioning, the
 /// background chrome, dismissal gestures, and keyboard translation.
 final class PresentorController: UIPresentationController {
-
     // MARK: - Input
 
     private let presentation: Presentation
@@ -22,7 +21,8 @@ final class PresentorController: UIPresentationController {
 
     private var conformingPresentedController: PresentorDelegate? {
         if let navigationController = presentedViewController as? UINavigationController,
-           let visibleViewController = navigationController.visibleViewController as? PresentorDelegate {
+           let visibleViewController = navigationController.visibleViewController as? PresentorDelegate
+        {
             return visibleViewController
         }
         return presentedViewController as? PresentorDelegate
@@ -83,19 +83,24 @@ final class PresentorController: UIPresentationController {
         case .down:
             return false
         case .automatic:
-            if case .center(.top) = presentation.position { return true }
+            if case .center(.top) = presentation.position {
+                return true
+            }
             return false
         }
     }()
 
-    private var shouldSwipeDown: Bool { !shouldSwipeUp }
+    private var shouldSwipeDown: Bool {
+        !shouldSwipeUp
+    }
 
     // MARK: - Init
 
     init(presentedViewController: UIViewController,
          presentingViewController: UIViewController?,
          presentation: Presentation,
-         contextFrameForPresentation: CGRect?) {
+         contextFrameForPresentation: CGRect?)
+    {
         self.presentation = presentation
         self.contextFrameForPresentation = contextFrameForPresentation
         super.init(presentedViewController: presentedViewController, presenting: presentingViewController)
@@ -133,7 +138,7 @@ final class PresentorController: UIPresentationController {
     }
 
     private func setupBackground() {
-        if case .system(let style) = presentation.appearance.blur {
+        if case let .system(style) = presentation.appearance.blur {
             visualEffect = UIBlurEffect(style: style)
         } else {
             chromeView.backgroundColor = presentation.appearance.backgroundColor
@@ -154,14 +159,12 @@ final class PresentorController: UIPresentationController {
     private func setupRoundedCorners() {
         let corners = presentation.resolvedRoundedCorners
         guard let view = presentedViewController.view else { return }
-        let clip: Bool
-
-        if let userClip = corners.clipToBounds {
-            clip = userClip
+        let clip: Bool = if let userClip = corners.clipToBounds {
+            userClip
         } else if presentation.appearance.shadow != nil {
-            clip = false
+            false
         } else {
-            clip = corners.corners != .none
+            corners.corners != .none
         }
 
         view.clipsToBounds = clip
@@ -174,10 +177,18 @@ final class PresentorController: UIPresentationController {
         guard let shadow = presentation.appearance.shadow else { return }
         let layer = presentedViewController.view.layer
 
-        if let color = shadow.color?.cgColor { layer.shadowColor = color }
-        if let opacity = shadow.opacity { layer.shadowOpacity = opacity }
-        if let offset = shadow.offset { layer.shadowOffset = offset }
-        if let radius = shadow.radius { layer.shadowRadius = radius }
+        if let color = shadow.color?.cgColor {
+            layer.shadowColor = color
+        }
+        if let opacity = shadow.opacity {
+            layer.shadowOpacity = opacity
+        }
+        if let offset = shadow.offset {
+            layer.shadowOffset = offset
+        }
+        if let radius = shadow.radius {
+            layer.shadowRadius = radius
+        }
     }
 
     private func setupSwipeIndicator() {
@@ -202,7 +213,7 @@ final class PresentorController: UIPresentationController {
                                                object: nil)
     }
 
-    nonisolated private func removeKeyboardObservers() {
+    private nonisolated func removeKeyboardObservers() {
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
     }
@@ -262,11 +273,11 @@ extension PresentorController {
             return
         }
 
-        coordinator.animate(alongsideTransition: { _ in
+        coordinator.animate { _ in
             blurEffectView?.effect = self.visualEffect
             self.chromeView.alpha = 1.0
             self.swipeIndicatorView.alpha = 0.7
-        })
+        }
     }
 
     override func presentationTransitionDidEnd(_ completed: Bool) {
@@ -282,9 +293,9 @@ extension PresentorController {
             return
         }
 
-        coordinator.animate(alongsideTransition: { _ in
+        coordinator.animate { _ in
             self.chromeView.alpha = 0
-        })
+        }
     }
 }
 
@@ -305,11 +316,12 @@ private extension PresentorController {
     /// Always measures content; cheap enough and avoids caching invalidation bugs.
     func measuredContentSize() -> CGSize {
         #if canImport(SwiftUI)
-        if let provider = presentedViewController as? PreferredSizeProviding,
-           let size = provider.preferredSize(in: containerFrame.size),
-           size != .zero {
-            return size
-        }
+            if let provider = presentedViewController as? PreferredSizeProviding,
+               let size = provider.preferredSize(in: containerFrame.size),
+               size != .zero
+            {
+                return size
+            }
         #endif
 
         return presentedViewController.view.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
@@ -352,11 +364,17 @@ extension PresentorController {
     private func swipeChanged(gesture: UIPanGestureRecognizer) {
         let translation = gesture.translation(in: presentedViewController.view)
 
-        if shouldSwipeUp, translation.y > 0 { return }
-        if shouldSwipeDown, translation.y < 0 { return }
+        if shouldSwipeUp, translation.y > 0 {
+            return
+        }
+        if shouldSwipeDown, translation.y < 0 {
+            return
+        }
 
         var limit = frameOfPresentedViewInContainerView.height / 1.5
-        if shouldSwipeUp { limit = -limit }
+        if shouldSwipeUp {
+            limit = -limit
+        }
 
         presentedView?.center = CGPoint(x: initialPresentedViewCenter.x,
                                         y: initialPresentedViewCenter.y + translation.y)
@@ -377,11 +395,11 @@ extension PresentorController {
                        delay: 0,
                        usingSpringWithDamping: 0.5,
                        initialSpringVelocity: 1,
-                       options: [],
-                       animations: {
-                           self.presentedView?.center = self.initialPresentedViewCenter
-                           self.swipeIndicatorView.center = self.initialSwipeIndicatorCenter
-                       })
+                       options: [])
+        {
+            self.presentedView?.center = self.initialPresentedViewCenter
+            self.swipeIndicatorView.center = self.initialSwipeIndicatorCenter
+        }
     }
 }
 
@@ -392,7 +410,8 @@ extension PresentorController {
         defer { keyboardIsShowing = true }
 
         guard notification.keyboardStartFrame != notification.keyboardEndFrame,
-              let keyboardFrame = notification.keyboardEndFrame else {
+              let keyboardFrame = notification.keyboardEndFrame
+        else {
             return
         }
 
@@ -437,17 +456,17 @@ private extension Corners {
     var maskedCorners: CACornerMask {
         switch self {
         case .none:
-            return []
+            []
         case .all:
-            return [.layerMinXMinYCorner, .layerMaxXMinYCorner, .layerMinXMaxYCorner, .layerMaxXMaxYCorner]
+            [.layerMinXMinYCorner, .layerMaxXMinYCorner, .layerMinXMaxYCorner, .layerMaxXMaxYCorner]
         case .top:
-            return [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+            [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         case .bottom:
-            return [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
+            [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
         case .left:
-            return [.layerMinXMinYCorner, .layerMinXMaxYCorner]
+            [.layerMinXMinYCorner, .layerMinXMaxYCorner]
         case .right:
-            return [.layerMaxXMinYCorner, .layerMaxXMaxYCorner]
+            [.layerMaxXMinYCorner, .layerMaxXMaxYCorner]
         }
     }
 }

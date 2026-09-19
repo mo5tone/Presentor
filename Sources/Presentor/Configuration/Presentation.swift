@@ -5,8 +5,6 @@
 //  Based on Presentr (MIT). See NOTICE.md.
 //
 
-import Foundation
-
 /// A complete, value-type description of how a view controller should be presented.
 ///
 /// Configure a `Presentation`, then pass it to
@@ -30,7 +28,8 @@ public struct Presentation {
                 transition: Transition = .coverVertical,
                 dismissTransition: Transition? = nil,
                 appearance: Appearance = Appearance(),
-                behavior: Behavior = Behavior()) {
+                behavior: Behavior = Behavior())
+    {
         self.size = size
         self.position = position
         self.transition = transition

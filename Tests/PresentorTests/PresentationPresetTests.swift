@@ -1,7 +1,7 @@
-import Testing
 @testable import Presentor
+import Testing
 
-@Suite struct PresentationPresetTests {
+struct PresentationPresetTests {
     @Test func alertPreset() {
         #expect(Presentation.alert.size.width == .fixed(270))
         #expect(Presentation.alert.size.height == .fixed(180))

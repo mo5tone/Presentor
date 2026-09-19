@@ -42,13 +42,13 @@ public enum ModalPosition: Equatable, Sendable {
 extension ModalPosition.Edge {
     var padding: CGFloat {
         switch self {
-        case .topLeft(let padding),
-             .top(let padding),
-             .topRight(let padding),
-             .bottomLeft(let padding),
-             .bottom(let padding),
-             .bottomRight(let padding):
-            return padding
+        case let .topLeft(padding),
+             let .top(padding),
+             let .topRight(padding),
+             let .bottomLeft(padding),
+             let .bottom(padding),
+             let .bottomRight(padding):
+            padding
         }
     }
 }
@@ -61,12 +61,12 @@ extension ModalPosition {
     ///   - containerFrame: The frame of the container the view is presented in.
     func calculateOrigin(presentedSize: CGSize, containerFrame: CGRect) -> CGPoint {
         switch self {
-        case .origin(let origin):
-            return origin
-        case .center(let center):
-            return center.calculateOrigin(presentedSize: presentedSize, containerFrame: containerFrame)
-        case .edge(let edge):
-            return edge.calculateOrigin(presentedSize: presentedSize, containerFrame: containerFrame)
+        case let .origin(origin):
+            origin
+        case let .center(center):
+            center.calculateOrigin(presentedSize: presentedSize, containerFrame: containerFrame)
+        case let .edge(edge):
+            edge.calculateOrigin(presentedSize: presentedSize, containerFrame: containerFrame)
         }
     }
 }
@@ -88,7 +88,7 @@ extension ModalPosition.Center {
         case .bottom:
             return CGPoint(x: containerFrame.minX + halfContainerWidth - halfWidth,
                            y: containerFrame.minY + (containerFrame.height * (3 / 4)) - halfHeight)
-        case .custom(let point):
+        case let .custom(point):
             return point
         }
     }
@@ -98,23 +98,23 @@ extension ModalPosition.Edge {
     func calculateOrigin(presentedSize: CGSize, containerFrame: CGRect) -> CGPoint {
         switch self {
         case .topLeft:
-            return CGPoint(x: containerFrame.minX + padding,
-                           y: containerFrame.minY + padding)
+            CGPoint(x: containerFrame.minX + padding,
+                    y: containerFrame.minY + padding)
         case .top:
-            return CGPoint(x: containerFrame.minX + (containerFrame.width / 2) - (presentedSize.width / 2),
-                           y: containerFrame.minY + padding)
+            CGPoint(x: containerFrame.minX + (containerFrame.width / 2) - (presentedSize.width / 2),
+                    y: containerFrame.minY + padding)
         case .topRight:
-            return CGPoint(x: containerFrame.maxX - presentedSize.width - padding,
-                           y: containerFrame.minY + padding)
+            CGPoint(x: containerFrame.maxX - presentedSize.width - padding,
+                    y: containerFrame.minY + padding)
         case .bottomLeft:
-            return CGPoint(x: containerFrame.minX + padding,
-                           y: containerFrame.maxY - presentedSize.height - padding)
+            CGPoint(x: containerFrame.minX + padding,
+                    y: containerFrame.maxY - presentedSize.height - padding)
         case .bottom:
-            return CGPoint(x: containerFrame.minX + (containerFrame.width / 2) - (presentedSize.width / 2),
-                           y: containerFrame.maxY - presentedSize.height - padding)
+            CGPoint(x: containerFrame.minX + (containerFrame.width / 2) - (presentedSize.width / 2),
+                    y: containerFrame.maxY - presentedSize.height - padding)
         case .bottomRight:
-            return CGPoint(x: containerFrame.maxX - presentedSize.width - padding,
-                           y: containerFrame.maxY - presentedSize.height - padding)
+            CGPoint(x: containerFrame.maxX - presentedSize.width - padding,
+                    y: containerFrame.maxY - presentedSize.height - padding)
         }
     }
 }

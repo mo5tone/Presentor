@@ -29,10 +29,10 @@ public enum AnimationTiming: Equatable, Sendable {
 
     var duration: TimeInterval {
         switch self {
-        case .normal(let duration):
-            return duration
-        case .spring(let duration, _, _, _):
-            return duration
+        case let .normal(duration):
+            duration
+        case let .spring(duration, _, _, _):
+            duration
         }
     }
 }
@@ -71,11 +71,11 @@ open class PresentationAnimation: NSObject, UIViewControllerAnimatedTransitionin
     }
 
     /// Performed after the animation completes.
-    open func afterAnimation(using transitionContext: PresentorTransitionContext) {}
+    open func afterAnimation(using _: PresentorTransitionContext) {}
 
     // MARK: UIViewControllerAnimatedTransitioning
 
-    public func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
+    public func transitionDuration(using _: UIViewControllerContextTransitioning?) -> TimeInterval {
         timing.duration
     }
 
@@ -114,9 +114,9 @@ open class PresentationAnimation: NSObject, UIViewControllerAnimatedTransitionin
         }
 
         switch timing {
-        case .normal(let duration):
+        case let .normal(duration):
             animate(context: context, transitionContext: transitionContext, duration: duration)
-        case .spring(let duration, let delay, let damping, let velocity):
+        case let .spring(duration, delay, damping, velocity):
             animateWithSpring(context: context,
                               transitionContext: transitionContext,
                               duration: duration,
@@ -128,7 +128,8 @@ open class PresentationAnimation: NSObject, UIViewControllerAnimatedTransitionin
 
     private func animate(context: PresentorTransitionContext,
                          transitionContext: UIViewControllerContextTransitioning,
-                         duration: TimeInterval) {
+                         duration: TimeInterval)
+    {
         beforeAnimation(using: context)
         UIView.animate(withDuration: duration, animations: {
             self.performAnimation(using: context)
@@ -143,7 +144,8 @@ open class PresentationAnimation: NSObject, UIViewControllerAnimatedTransitionin
                                    duration: TimeInterval,
                                    delay: TimeInterval,
                                    damping: CGFloat,
-                                   velocity: CGFloat) {
+                                   velocity: CGFloat)
+    {
         beforeAnimation(using: context)
         UIView.animate(withDuration: duration,
                        delay: delay,

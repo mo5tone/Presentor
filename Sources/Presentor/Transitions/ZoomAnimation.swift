@@ -16,13 +16,13 @@ public final class ZoomAnimation: PresentationAnimation {
         self.initialScale = initialScale
     }
 
-    public override func beforeAnimation(using transitionContext: PresentorTransitionContext) {
+    override public func beforeAnimation(using transitionContext: PresentorTransitionContext) {
         guard transitionContext.isPresenting else { return }
         transitionContext.animatingView?.transform = CGAffineTransform(scaleX: initialScale, y: initialScale)
         transitionContext.animatingView?.alpha = 0
     }
 
-    public override func performAnimation(using transitionContext: PresentorTransitionContext) {
+    override public func performAnimation(using transitionContext: PresentorTransitionContext) {
         let view = transitionContext.animatingView
         if transitionContext.isPresenting {
             view?.transform = .identity
@@ -33,7 +33,7 @@ public final class ZoomAnimation: PresentationAnimation {
         }
     }
 
-    public override func afterAnimation(using transitionContext: PresentorTransitionContext) {
+    override public func afterAnimation(using transitionContext: PresentorTransitionContext) {
         transitionContext.animatingView?.transform = .identity
         transitionContext.animatingView?.alpha = 1
     }

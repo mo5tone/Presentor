@@ -1,8 +1,8 @@
 import Foundation
-import Testing
 @testable import Presentor
+import Testing
 
-@Suite struct ModalDimensionTests {
+struct ModalDimensionTests {
     @Test func defaultUsesMarginsForWidthAndPercentageForHeight() {
         // 400 - 30*2 = 340
         #expect(ModalDimension.default.resolveWidth(parent: 400, orientation: .portrait) == 340)

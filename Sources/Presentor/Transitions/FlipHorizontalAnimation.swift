@@ -10,7 +10,7 @@
 import UIKit
 
 public final class FlipHorizontalAnimation: PresentationAnimation {
-    public override func performAnimation(using transitionContext: PresentorTransitionContext) {
+    override public func performAnimation(using transitionContext: PresentorTransitionContext) {
         // Keep the flipping views above the background chrome.
         transitionContext.toView?.layer.zPosition = 999
         transitionContext.fromView?.layer.zPosition = 999
@@ -28,9 +28,9 @@ public final class FlipHorizontalAnimation: PresentationAnimation {
         UIView.animate(withDuration: 0.6, delay: 0, options: .curveLinear, animations: {
             transitionContext.fromView?.layer.transform = fromRotation
         }, completion: { _ in
-            UIView.animate(withDuration: 0.6, delay: 0, options: .curveLinear, animations: {
+            UIView.animate(withDuration: 0.6, delay: 0, options: .curveLinear) {
                 transitionContext.toView?.layer.transform = CATransform3DMakeRotation(.pi / 2.0, 0.0, 0.0, 0.0)
-            })
+            }
         })
     }
 }
