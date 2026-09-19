@@ -11,10 +11,51 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  lint:
+    name: Lint & Format
+    runs-on: macos-15
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: jdx/mise-action@v2
+        with:
+          cache: true
+
+      - name: SwiftLint
+        run: swiftlint lint --strict --reporter github-actions-logging
+
+      - name: SwiftFormat
+        run: swiftformat --lint .
+
+  analyze:
+    name: Analyze
+    runs-on: macos-15
+    timeout-minutes: 30
+    needs: lint
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: jdx/mise-action@v2
+        with:
+          cache: true
+
+      - name: Build with compiler log
+        run: |
+          set -o pipefail
+          xcodebuild build \
+            -scheme Presentor \
+            -destination 'generic/platform=iOS Simulator' \
+            -derivedDataPath .build/analyze | tee build.log
+
+      - name: SwiftLint analyze
+        run: swiftlint analyze --strict --compiler-log-path build.log
+
   logic-tests:
     name: Swift Testing (logic)
     runs-on: macos-15
     timeout-minutes: 30
+    needs: lint
     steps:
       - uses: actions/checkout@v4
 
@@ -53,11 +94,13 @@ jobs:
     name: Example build
     runs-on: macos-15
     timeout-minutes: 30
+    needs: lint
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install XcodeGen
-        run: brew install xcodegen
+      - uses: jdx/mise-action@v2
+        with:
+          cache: true
 
       - name: Generate example project
         working-directory: Example

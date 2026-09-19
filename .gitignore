@@ -28,3 +28,8 @@ Package.resolved
 ## Example (generated)
 Example/PresentorExample.xcodeproj/
 Example/.build/
+
+## Lint / analyze artifacts
+build.log
+*.xcresult
+TestResults.xcresult

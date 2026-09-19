@@ -1,6 +1,9 @@
---swiftversion 6.0
+# SwiftFormat configuration for Presentor
+#
+# Run locally with: mise run lint    (format-check + lint)
+# Auto-format with:  mise run format
+
+--swift-version 6.0
 --indent 4
---hexgrouping 4,4,4,4
---maxwidth 150
---wrapeffects never
---disable redundantType,wrapMultilineStatementBraces
+--exclude Example/PresentorExample.xcodeproj,.build,DerivedData,TestResults.xcresult
+--disable redundantType

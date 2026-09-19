@@ -1,0 +1,17 @@
+[tools]
+swiftformat = "0.63.0"
+swiftlint = "0.65.1"
+xcbeautify = "3.2.1"
+xcodegen = "2.46.0"
+
+[tasks.lint]
+description = "Lint and format-check the codebase"
+run = "swiftlint lint --strict --reporter emoji && swiftformat --lint ."
+
+[tasks.format]
+description = "Auto-format and auto-fix the codebase"
+run = "swiftformat . && swiftlint lint --fix"
+
+[tasks.analyze]
+description = "Run SwiftLint analyzer rules against a fresh build log"
+run = "xcodebuild build -scheme Presentor -destination 'generic/platform=iOS Simulator' -derivedDataPath .build/analyze | tee build.log && swiftlint analyze --strict --compiler-log-path build.log"
