@@ -9,6 +9,8 @@ import Foundation
 
 /// Describes the animation used to present or dismiss a view controller.
 public enum Transition {
+    /// Zoom in from a smaller size while fading in.
+    case zoom
     /// Cross-fade.
     case crossDissolve
     /// Slide in vertically from the bottom.
@@ -29,6 +31,8 @@ public enum Transition {
     /// Returns the animation object responsible for this transition.
     public func animation() -> PresentationAnimation {
         switch self {
+        case .zoom:
+            return ZoomAnimation()
         case .crossDissolve:
             return CrossDissolveAnimation()
         case .coverVertical:

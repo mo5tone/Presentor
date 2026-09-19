@@ -33,6 +33,7 @@ import Testing
     }
 
     @Test func transitionMapsToAnimationType() {
+        #expect(Transition.zoom.animation() is ZoomAnimation)
         #expect(Transition.crossDissolve.animation() is CrossDissolveAnimation)
         #expect(Transition.flipHorizontal.animation() is FlipHorizontalAnimation)
         #expect(Transition.coverFromCorner(.topLeft).animation() is CoverFromCornerAnimation)

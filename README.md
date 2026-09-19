@@ -72,13 +72,34 @@ Or driven by an item:
 
 | Preset | Size | Position | Notes |
 |---|---|---|---|
-| `.alert` | 270 × 180 | center | rounded corners |
-| `.popup` | default | center | rounded corners |
+| `.alert` | 270 × 180 | center | zoom, rounded corners |
+| `.popup` | default | center | zoom, rounded corners |
 | `.topHalf` | full × half | top | slides down from top |
 | `.bottomHalf` | full × half | bottom | |
 | `.fullScreen` | full × full | center | |
 | `.bottomCard` | full × 350 | bottom edge | top rounded corners + swipe indicator |
 | `.dynamic(position:)` | Auto Layout | configurable | sizes to content |
+
+### Customizing a presentation
+
+For example, a floating card pinned to the bottom: 400pt tall, 32pt horizontal
+padding, 48pt from the bottom, with 32pt rounded corners.
+
+```swift
+var presentation = Presentation()
+presentation.size = ModalSize(width: .padding(32), height: .fixed(400))
+presentation.position = .edge(.bottom(padding: 48))
+presentation.transition = .coverVertical
+presentation.appearance.roundedCorners = RoundedCorners(.all, radius: 32)
+presentation.behavior.dismissOnSwipe = true
+presentation.behavior.dismissOnSwipeDirection = .down
+
+let card = MyCardViewController()   // give its view a white background
+present(card, using: presentation, animated: true)
+```
+
+See `Example/PresentorExample/Presentation+Examples.swift` for this preset and
+`ContentView.swift` for the SwiftUI version.
 
 ## Configuration
 
@@ -112,7 +133,7 @@ presentation.behavior.context = splitViewController   // presentation context
 
 ### Transitions
 
-Built-ins: `.crossDissolve`, `.coverVertical`, `.coverVerticalFromTop`,
+Built-ins: `.zoom`, `.crossDissolve`, `.coverVertical`, `.coverVerticalFromTop`,
 `.coverHorizontalFromRight`, `.coverHorizontalFromLeft`, `.flipHorizontal`,
 `.coverFromCorner(_)`.
 

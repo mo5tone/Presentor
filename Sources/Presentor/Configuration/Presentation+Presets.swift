@@ -8,19 +8,19 @@
 import CoreGraphics
 
 public extension Presentation {
-    /// A small 270x180 alert, centered, with rounded corners.
+    /// A small 270x180 alert, centered, with rounded corners, zooming in and out.
     static let alert = Presentation(
         size: ModalSize(width: .fixed(270), height: .fixed(180)),
         position: .center(.screen),
-        transition: .coverVertical,
+        transition: .zoom,
         appearance: Appearance(roundedCorners: .all)
     )
 
-    /// A default-sized popup, centered, with rounded corners.
+    /// A default-sized popup, centered, with rounded corners, zooming in and out.
     static let popup = Presentation(
         size: .default,
         position: .center(.screen),
-        transition: .coverVertical,
+        transition: .zoom,
         appearance: Appearance(roundedCorners: .all)
     )
 

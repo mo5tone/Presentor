@@ -7,6 +7,12 @@ import Testing
         #expect(Presentation.alert.size.height == .fixed(180))
         #expect(Presentation.alert.position == .center(.screen))
         #expect(Presentation.alert.resolvedRoundedCorners == RoundedCorners.all)
+        #expect(Presentation.alert.transitionForPresent.animation() is ZoomAnimation)
+        #expect(Presentation.alert.transitionForDismiss.animation() is ZoomAnimation)
+    }
+
+    @Test func popupPresetZooms() {
+        #expect(Presentation.popup.transitionForPresent.animation() is ZoomAnimation)
     }
 
     @Test func bottomCardPreset() {
