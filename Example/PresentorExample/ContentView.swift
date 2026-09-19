@@ -4,6 +4,7 @@ import SwiftUI
 struct ContentView: View {
     @State private var isPresented = false
     @State private var presentation = Presentation.popup
+    @State private var contentBackground: Color = Color(.systemBackground)
 
     var body: some View {
         NavigationView {
@@ -17,6 +18,10 @@ struct ContentView: View {
                     button("Full screen", .fullScreen)
                 }
 
+                section("Custom") {
+                    button("Floating card", .floatingCard, background: .white)
+                }
+
                 section("Dynamic") {
                     button("Dynamic (Auto Layout)", .dynamic())
                 }
@@ -24,13 +29,16 @@ struct ContentView: View {
             .navigationTitle("Presentor")
         }
         .presentor(isPresented: $isPresented, presentation: presentation) {
-            PopupContent(dismiss: { isPresented = false })
+            PopupContent(background: contentBackground, dismiss: { isPresented = false })
         }
     }
 
-    private func button(_ title: String, _ presentation: Presentation) -> some View {
+    private func button(_ title: String,
+                        _ presentation: Presentation,
+                        background: Color = Color(.systemBackground)) -> some View {
         Button(title) {
             self.presentation = presentation
+            self.contentBackground = background
             isPresented = true
         }
     }
@@ -42,6 +50,7 @@ struct ContentView: View {
 }
 
 private struct PopupContent: View {
+    let background: Color
     let dismiss: () -> Void
 
     var body: some View {
@@ -55,7 +64,7 @@ private struct PopupContent: View {
                 .buttonStyle(.borderedProminent)
         }
         .padding(24)
-        .frame(maxWidth: .infinity)
-        .background(Color(.systemBackground))
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(background)
     }
 }

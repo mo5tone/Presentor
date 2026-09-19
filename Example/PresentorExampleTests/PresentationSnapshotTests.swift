@@ -2,6 +2,7 @@ import Presentor
 import SnapshotTesting
 import Testing
 import UIKit
+@testable import PresentorExample
 
 /// App-hosted image snapshots of the presentation chrome + presented content.
 ///
@@ -45,6 +46,13 @@ import UIKit
         let container = try #require(containerView(of: window))
         assertSnapshot(of: container, as: .image)
     }
+
+    @Test func customFloatingCard() throws {
+        let window = try #require(presenting(.floatingCard, contentBackground: .white))
+        defer { window.isHidden = true }
+        let container = try #require(containerView(of: window))
+        assertSnapshot(of: container, as: .image)
+    }
 }
 
 private func containerView(of window: UIWindow) -> UIView? {
@@ -54,11 +62,11 @@ private func containerView(of window: UIWindow) -> UIView? {
 /// Presents a solid-colored controller with `presentation` and returns the
 /// window, or `nil` if the presentation never took place.
 @MainActor
-private func presenting(_ presentation: Presentation) -> UIWindow? {
+private func presenting(_ presentation: Presentation, contentBackground: UIColor = .systemRed) -> UIWindow? {
     let window = makeWindow()
     let root = window.rootViewController!
     let content = UIViewController()
-    content.view.backgroundColor = .systemRed
+    content.view.backgroundColor = contentBackground
 
     root.present(content, using: presentation, animated: false)
 
