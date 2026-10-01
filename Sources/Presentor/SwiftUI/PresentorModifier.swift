@@ -23,9 +23,9 @@
                        @ViewBuilder content: @escaping () -> some View) -> some View
         {
             background(
-                PresentorPresenter(isPresented: isPresented,
-                                   presentation: presentation,
-                                   content: content)
+                PresentorHost(value: isPresented.optional,
+                              presentation: presentation,
+                              content: { _ in content() })
             )
         }
 
@@ -35,49 +35,40 @@
                                            @ViewBuilder content: @escaping (Item) -> some View) -> some View
         {
             background(
-                PresentorItemPresenter(item: item,
-                                       presentation: presentation,
-                                       content: content)
+                PresentorHost(value: item,
+                              presentation: presentation,
+                              content: content)
             )
         }
     }
 
-    private struct PresentorPresenter<Content: View>: UIViewControllerRepresentable {
-        @Binding var isPresented: Bool
+    /// Bridges an optional source of truth to `PresenterViewController`: a
+    /// non-`nil` value presents, `nil` dismisses.
+    private struct PresentorHost<Value, Content: View>: UIViewControllerRepresentable {
+        @Binding var value: Value?
         let presentation: Presentation
-        let content: () -> Content
+        let content: (Value) -> Content
 
         func makeUIViewController(context _: Context) -> PresenterViewController<Content> {
             PresenterViewController()
         }
 
         func updateUIViewController(_ viewController: PresenterViewController<Content>, context _: Context) {
-            if isPresented {
+            if let value {
                 viewController.presentIfNeeded(presentation: presentation,
-                                               content: content) { isPresented = false }
+                                               content: { content(value) },
+                                               onDismiss: { self.$value.wrappedValue = nil })
             } else {
                 viewController.dismiss()
             }
         }
     }
 
-    private struct PresentorItemPresenter<Item: Identifiable, Content: View>: UIViewControllerRepresentable {
-        @Binding var item: Item?
-        let presentation: Presentation
-        let content: (Item) -> Content
-
-        func makeUIViewController(context _: Context) -> PresenterViewController<Content> {
-            PresenterViewController()
-        }
-
-        func updateUIViewController(_ viewController: PresenterViewController<Content>, context _: Context) {
-            if let value = item {
-                viewController.presentIfNeeded(presentation: presentation,
-                                               content: { content(value) },
-                                               onDismiss: { item = nil })
-            } else {
-                viewController.dismiss()
-            }
+    private extension Binding where Value == Bool {
+        /// `true` while presenting, `nil` once dismissed.
+        var optional: Binding<Bool?> {
+            Binding<Bool?>(get: { wrappedValue ? true : nil },
+                           set: { wrappedValue = $0 ?? false })
         }
     }
 
