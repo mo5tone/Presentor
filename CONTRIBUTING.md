@@ -68,10 +68,19 @@ parked as `action_required` and never satisfy the required checks on `main`.
 Until the secret is set the workflow falls back to `GITHUB_TOKEN`, and release
 PRs must be merged with a ruleset bypass.
 
+The project was reset to a pre-1.0 baseline after an early `1.0.0`/`1.1.0` history
+was removed. `release-as` pins the first release back to `0.1.0`: release-please
+derives the current version from the last merged release PR, so without it the
+next release would have been `2.0.0`. **Remove `release-as` once the `0.1.0`
+release is out**, otherwise every later run keeps proposing `0.1.0`.
+
 ## Versioning
 
 - The project follows [Semantic Versioning](https://semver.org/) (`MAJOR.MINOR.PATCH`).
-- Git tags are **pure numeric, without a `v` prefix** (for example `1.1.0`).
-- `CHANGELOG.md` headings use the same numeric form (`## [1.1.0]`).
+- Git tags are **pure numeric, without a `v` prefix** (for example `0.1.0`).
+- `CHANGELOG.md` headings use the same numeric form (`## [0.1.0]`).
 - Version bumps are derived from commit types: `feat` → minor, `fix` → patch,
   breaking changes → major.
+- While the version is below `1.0.0`, breaking changes bump the minor instead of
+  the major version (`bump-minor-pre-major`), per the SemVer rule that `0.y.z`
+  is not yet stable.
