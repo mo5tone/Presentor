@@ -17,3 +17,9 @@ jobs:
         with:
           config-file: release-please-config.json
           manifest-file: .release-please-manifest.json
+          # PRs opened with GITHUB_TOKEN do not trigger workflows: their runs are
+          # parked as `action_required` and never report checks, which leaves the
+          # release PR blocked by the `main` ruleset. A PAT (or GitHub App token)
+          # makes those runs execute. Falls back to GITHUB_TOKEN until the secret
+          # exists, preserving today's behaviour.
+          token: ${{ secrets.RELEASE_PLEASE_TOKEN || secrets.GITHUB_TOKEN }}

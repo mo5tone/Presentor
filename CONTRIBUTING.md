@@ -61,6 +61,13 @@ Releases are automated with [release-please](https://github.com/googleapis/relea
 It reads the Conventional Commit history on `main` and opens a release PR that
 updates `CHANGELOG.md` and the version tag. Merging that PR cuts the release.
 
+The workflow runs it with the `RELEASE_PLEASE_TOKEN` repository secret: a
+fine-grained PAT with `contents: write` and `pull requests: write`. PRs created
+with the default `GITHUB_TOKEN` do not trigger workflows, so their CI runs stay
+parked as `action_required` and never satisfy the required checks on `main`.
+Until the secret is set the workflow falls back to `GITHUB_TOKEN`, and release
+PRs must be merged with a ruleset bypass.
+
 ## Versioning
 
 - The project follows [Semantic Versioning](https://semver.org/) (`MAJOR.MINOR.PATCH`).
