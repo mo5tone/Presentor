@@ -30,9 +30,6 @@ xcodebuild build -scheme Presentor -destination 'generic/platform=iOS Simulator'
   unformatted or lint-failing code.
 - Do not edit `CHANGELOG.md` or version numbers by hand; releases are automated
   (see below).
-- The package has two manifests: `Package.swift` (Swift 6 language mode) and
-  `Package@swift-5.swift` (Swift 5.10 compatibility). Keep their targets and
-  dependencies in sync.
 
 ## Commit and PR conventions
 
